@@ -11,7 +11,7 @@ This decreases the chance that a visitor will visit your site.
 The source device used in this tool is a laptop with Chrome web browser (user agent) :
 Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.75 Safari/537.36
 
-In this configuration, the maximum width of the title is 588 pixels, and 1250 pixels for the description.
+In this configuration, the maximum width of the title is 554 pixels, and 1204 pixels for the description.
 
 See https://github.com/AnthonySigogne/seo-pixel-width for more information.
 """
@@ -57,13 +57,13 @@ def pixels_width():
             # show the result
             data = r.json()
             return render_template('layout.html',
-                url=url,
+                url=url[:90]+"..." if len(url) > 90 else url,
                 data=data)
         else :
             # error for this url (invalid link, no content,...)
-            return render_template('layout-empty.html', error="Invalid link or no content to analyze...", url=url)
+            return render_template('layout-empty.html', error="Invalid link or no content to analyze...")
 
-    else :
+    elif title or description :
         # analyze title and/or description
         try :
             r = requests.post('http://%s:%s/pixels'%(host, port), data = {'title':title, "description":description})
@@ -74,7 +74,6 @@ def pixels_width():
             # show the result
             data = r.json()
             return render_template('layout.html',
-                url="http://myexampleurl.com",
                 data=data)
 
     # return homepage (no query)
